@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+	<section id="signin" class="sigin">
+		<div class="form-wrapper text-center">
+			<form class="form-signin" method="post">
+				{{ form.hidden_tag() }}
+				<h1 class="h3 mb-3 font-weight-normal">Введите пароль</h1>
+				{{ form.secret.label (class_ = "sr-only") }}
+				{{ form.secret(class_ = "form-control", placeholder = "Пароль") }}
+				{{ form.submit(class_ = "btn btn-lg btn-primary btn-block") }}
+			</form>
+		</div>
+	</section>
+{% endblock %}

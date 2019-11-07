@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ru">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+		<title>Панель администрирования</title>
+		<style>
+			input[readonly] {
+			background-color: transparent;
+			border: none;
+			box-shadow: none;
+			width:100%
+			}
+			body {
+				min-width : 320px;
+			}
+			.octicon {
+				display: inline-block;
+				fill: currentColor;
+				width : 16px;
+				height : 16px;
+			}
+			.form-wrapper {
+				display: -ms-flexbox;
+				display: flex;
+				-ms-flex-align: center;
+				align-items: center;
+				padding-top: 40px;
+				padding-bottom: 40px;
+			}
+
+			.form-signin {
+				width: 100%;
+				max-width: 330px;
+				padding: 15px;
+				margin: auto;
+			}
+			.form-signin .checkbox {
+				font-weight: 400;
+			}
+			.form-signin .form-control {
+				position: relative;
+				box-sizing: border-box;
+				height: auto;
+				padding: 10px;
+				font-size: 16px;
+			}
+			.form-signin .form-control:focus {
+				z-index: 2;
+			}
+			.form-control input[type="password"] {
+				margin-bottom: 10px;
+				border-top-left-radius: 0;
+				border-top-right-radius: 0;
+			}
+			.blinking{
+				animation:blinkingImage 0.8s infinite;
+			}
+			@keyframes blinkingImage{
+				0%{		opacity: 1;	}
+				49%{	opacity: 0;	}
+				50%{	opacity: 0;	}
+				99%{	opacity: 0;	}
+				100%{	opacity: 1;	}
+			}
+		</style>
+	</head>
+	<body>
+		<header id="header" class="header">
+			<div class = "container">
+				<div class = "row">
+					<div class = "col">
+						{% with messages = get_flashed_messages() %}
+							{% if messages %}
+									<div class="alert alert-primary" role="alert">
+									{% for message in messages %}
+										{{ message }}<br>
+									{% endfor %}
+							{% else %}
+									<div class="alert alert-primary d-none" role="alert">
+							{% endif %}
+									</div>
+						{% endwith %}
+					</div>
+				</div>
+				<div class = "row">
+					<div class = "col">
+						<a href = "{{ url_for ('ShowIndex') }}">
+							<img class="d-block mx-auto mb-4" src="/static/logo.png" alt="Logo">
+						</a>
+					</div>
+				</div>
+				<div class = "row">
+					<div class = "col">
+						<h2 class="text-center">Панель администрирования</h2>
+					</div>
+				</div>
+				{% if breadcrumbs %}
+					<div class = "row">
+						<div class = "col">
+							<nav aria-label="breadcrumb">
+								<ol class="breadcrumb">
+									{% for breadcrumb in breadcrumbs %}
+										{% if not loop.last %}
+											<li class="breadcrumb-item"><a href="{{ breadcrumbs[breadcrumb] }}">{{ breadcrumb }}</a></li>
+										{% else %}
+											<li class="breadcrumb-item active" aria-current="page">{{ breadcrumb }}</li>
+										{% endif %}
+									{% endfor %}
+								</ol>
+							</nav>
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		</header>
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		{% block content %}{% endblock %}		
+	</body>
+</html>

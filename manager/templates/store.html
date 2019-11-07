@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+<section id = "modifyStore" class = "modifyStore">
+	<form method = "post" action="{{ url_for('ModifyStore') }}">
+		<div class="container border bg-light mb-2 py-2">
+			<h6 class = "text-secondary text-right">{{ store['vendor_id'] }}</a></h6>
+			<div class="row mx-auto mb-2">
+				<div class = "col-sm">
+					{{ modifyStoreForm.hidden_tag() }}
+					{{ modifyStoreForm.owner.label }}
+				</div>
+				<div class="col-sm-6">
+					{{ modifyStoreForm.owner(class_ = "form-control") }}
+				</div>
+				<div class = "col-sm">
+					&nbsp;
+				</div>
+			</div>
+			<div class="row mx-auto mb-2">
+				<div class = "col-sm">
+					{{ modifyStoreForm.section.label }}
+				</div>
+				<div class="col-sm-6">
+					{{ modifyStoreForm.section(class_ = "form-control") }}
+				</div>
+				<div class = "col-sm my-2 text-center" >
+					<button type="submit" id="modify" name="modify" class="btn btn-primary" value="Сохранить">
+						<img class = "octicon" src="http://admin.pushkind.com/static/octicons/check.svg" alt = "save">
+					</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</section>
+<section id = "productList" class = "productList">
+	<div class="container border bg-light py-2">
+		<h6 class = "text-secondary text-right">Товары магазина</h6>
+		<nav aria-label="Page navigation example">
+			<ul class="pagination">
+				<li class="page-item {% if products['_links']['prev'] is none %} disabled {% endif %}">
+					<a class="page-link" href="{{ products['_links']['prev'] }}" aria-label="Previous">
+						<span aria-hidden="true">&laquo;</span>
+						<span class="sr-only">Previous</span>
+					</a>
+				</li>
+				<li class="page-item active">{{ products['_meta']['page'] }}/{{ products['_meta']['total_pages'] }}</li>
+				<li class="page-item {% if products['_links']['next'] is none %} disabled {% endif %}">
+					<a class="page-link" href="{{ products['_links']['next'] }}" aria-label="Next">
+						<span aria-hidden="true">&raquo;</span>
+						<span class="sr-only">Next</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+		{% for product in products['items'] %}
+			<div class="row mb-2 border-bottom">
+				<div class="col-sm overflow-hidden">
+					{{ product.title }}
+				</div>
+				<div class="col-sm overflow-hidden">
+					<span class="d-sm-none text-info">Артикул: </span>{{ product.sku }}
+				</div>
+				<div class="col-sm overflow-hidden">
+					{{ product.description }}
+				</div>
+				<div class="col-sm overflow-hidden">
+					<span class="d-sm-none text-info">Категория: </span> {{ product.path }}
+				</div>
+				<div class="col-sm text-info overflow-hidden">
+					<span class="d-sm-none text-info">Цена: </span> {{ product.price }}
+				</div>	
+				<div class="col-auto mb-2 overflow-hidden">
+					<img src="{{ product.picture if product.picture!=None else 'http://admin.pushkind.com/static/octicons/file-media.svg' }}" height="64" width="64" alt="thumbnail">
+				</div>				
+			</div>
+		{% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<section id = "productList" class = "productList">
+	<div class="container border bg-light py-2">
+		<h6 class = "text-secondary text-right">Изменения мастер-справочника</h6>
+		<form method = "post" action="{{ url_for('SetSupplierProducts') }}" enctype="multipart/form-data">
+			{{ form.hidden_tag() }}
+			<div class="row mx-auto mb-2">
+					<div class="col">
+						<button class="btn btn-success" type="submit" id="save" name="save" value="Сохранить">
+							<img class = "octicon" src="/static/octicons/check.svg" alt = "save">
+						</button>
+					</div>
+					<div class="col text-right">
+						<button class="btn btn-danger" type="submit" id="cancel" name="cancel" value="Отменить">
+							<img class = "octicon" src="/static/octicons/x.svg" alt = "cancel">
+						</button>
+					</div>
+			</div>
+		</form>
+		{% for key,product in products.iterrows() %}
+			<div class="row mx-auto mb-2 border-bottom 
+			{% if product['Status'] == 'removed' %}
+			bg-danger text-white
+			{% elif product['Status'] == 'changed' %}
+			bg-warning text-white
+			{% elif product['Status'] == 'new' %}
+			bg-success text-white
+			{% else %}
+				{% set textColor = ' text-info' %}
+			{% endif %}
+			">
+				<div class="col-sm-3 overflow-hidden">
+					{{ product['productTitle_x'] }}
+				</div>
+				<div class="col-sm{{ textColor }}">
+					<span class="d-sm-none">Артикул: </span>{{ product['productSku'] }}
+				</div>	
+				<div class="col-sm-3 overflow-hidden">
+					<span class="d-sm-none">Категория: </span>{{ product['path_x'] }}
+				</div>	
+				<div class="col-sm{{ textColor }}">
+					<span class="d-sm-none">Цена: </span>
+					{% if product['productPrice_x'] != product['productPrice_y'] %}
+						{{ product['productPrice_y'] }} => {{ product['productPrice_x'] }}
+					{% else %}
+						{{ product['productPrice_x'] }}
+					{% endif %}
+				</div>
+				<div class="col-auto mb-2">
+					<img src="{{ product['productPicture_x'] }}" height="64" width="64" alt="thumbnail">
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+</section>
+{% endblock %}

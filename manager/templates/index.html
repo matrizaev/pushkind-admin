@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section id = "coreStore" class = "coreStore">
+	<div class = "container my-2 border bg-light">
+		<h6 class = "text-secondary text-right">Центральный магазин</h6>		
+		<div class = "row border-bottom mx-auto mb-2">
+			<div class ="col overflow-hidden">
+				<h6>URL адрес</h6>
+			</div>
+			<div class = "col overflow-hidden">
+				<h6>EMAIL заказов</h6>
+			</div>
+			<div class = "col overflow-hidden">
+				<h6>EMAIL обновлений</h6>
+			</div>
+		</div>
+		<div class = "row border-bottom mx-auto mb-2">
+			{% if coreStore is not none %}
+				<div class ="col overflow-hidden">
+					<a href="{{ coreStore['coreUrl'] }}">{{ coreStore['coreUrl'] }}</a>
+				</div>
+				<div class = "col overflow-hidden">
+					{{ coreStore['ordersAddress'] }}
+				</div>
+				<div class = "col overflow-hidden">
+					{{ coreStore['updatesAddress'] }}
+				</div>
+			{% endif %}
+		</div>
+		<h6 class = "text-secondary text-right">Сводный прайс-лист</h6>
+		<div class = "row border-bottom mx-auto">
+			<div class = "col overflow-hidden">
+				<a id="getCoreProducts" class="btn btn-primary mb-1" href="{{ url_for ('GetCoreProducts') }}" role="button">Полный</a>
+			</div>
+			<div class ="col overflow-hidden">
+				<a class="btn btn-success mb-1" href="" role="button" id="mailCore">Отправить</a>
+			</div>
+			<div class ="col overflow-hidden">
+				<a  id="checkCoreNeedUpdateBtn" class="btn btn-warning mb-1" href="{{ url_for ('GetProductsUpdates') }}" role="button">Обновления</a>
+			</div>
+		</div>
+	</div>
+</section>
+<section id = "storesList" class = "storesList">	
+	<div class="container border bg-light">
+		<h6 class = "text-secondary text-right">Личные кабинеты</h6>
+		<div class = "row border-bottom mx-auto mb-2">
+			<div class ="col-4 overflow-hidden">
+				<h6>Идентификатор</h6>
+			</div>
+			<div class = "col-3 overflow-hidden">
+				<h6>Корневая категория</h6>
+			</div>
+			<div class = "col-3 overflow-hidden">
+				<h6>Статистика</h6>
+			</div>
+			<div class = "col-2 overflow-hidden">
+				<h6>&nbsp;</h6>
+			</div>
+		</div>
+		<div class="row mx-auto mb-2">
+			<div class="col">
+				<input id="storeFilter" type="text" placeholder="Поиск..">
+			</div>
+		</div>
+		<div id="storesListInner">
+			{% for store in stores['items'] %}
+				<div class = "row border-bottom mx-auto mb-2">
+					<div class = "col-4 overflow-hidden">
+						{{ store['vendor_id'] }}
+					</div>
+					<div class = "col-3">
+					{% if store['section'] is not none %}
+						{{ store['section'] }}
+					{% endif %}
+					</div>
+					<div class = "col-3">
+						<a class="btn btn-primary mb-1" href="{{ url_for('GetStatistics', storeId = store['id']) }}" role="button"><img class = "octicon" src="http://admin.pushkind.com/static/octicons/project.svg" alt = "stat"></a>
+					</div>
+					<div class = "col-2">
+						<a class="btn btn-info mb-1" href="{{ url_for('ShowStore', storeId = store['id']) }}" role="button">
+							<img class = "octicon {% if store['want_to_publish'] == 'publish' %} blinking {% endif %}" src="http://admin.pushkind.com/static/octicons/pencil.svg" alt = "edit">
+						</a>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</section>
+<script>
+	function ShowAlert (data){
+		mailAlert = $(".alert");
+		mailAlert.empty().append( data );
+		mailAlert.removeClass("d-none");
+	}
+	function CheckCoreNeedUpdate(){
+		$.post("CheckCoreNeedUpdate", {}, function (data){
+			if (data == "1")
+				$("#checkCoreNeedUpdateGlyph").addClass ("blinking");
+			else if (data == "0")
+				$("#checkCoreNeedUpdateGlyph").removeClass ("blinking");
+			else
+				ShowAlert (data)
+		});
+	}
+	$(document).ready(function(){
+		CheckCoreNeedUpdate();
+		setInterval (CheckCoreNeedUpdate, 10000);
+		$("#checkCoreNeedUpdateBtn").click(function(e){
+			$("#checkCoreNeedUpdateGlyph").removeClass ("blinking");
+		});
+	  $("#storeFilter").on("keyup", function() {
+		var value = $(this).val().toLowerCase();
+		$("#storesListInner div.row").filter(function() {
+		  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+		});
+	  });
+	  $("#mailCore").click(function(e){
+		e.preventDefault();
+		$.post("{{ url_for('MailCore') }}", {}, ShowAlert);
+	  });
+	  $("#getCoreProducts").click(function(e){
+		$("img.octicon").removeClass('blinking');
+	  });
+	});
+</script>
+{% endblock %}
