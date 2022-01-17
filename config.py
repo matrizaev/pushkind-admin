@@ -1,5 +1,5 @@
 class Config (object):
-	SECRET_KEY = 'PushkindDotCom'
+	SECRET_KEY = 'you-will-never-guess'
 	SESSION_TYPE = 'filesystem'
 	#SESSION_FILE_DIR = '/var/www2/flask_session'
 	DATABASE_LOCATION = 'pushkind.db'
